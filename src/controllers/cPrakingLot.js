@@ -1,10 +1,15 @@
 const mParkingLot = require("../models/mParkingLot")
+const {
+    convertDateTime
+} = require("../utils/convertDateTime")
+const {
+    calculateTotalPayment
+} = require("../utils/calculateTotalPayment")
 
 module.exports = {
     register: async (req, res) => {
         try {
             const existCars = await mParkingLot.readData()
-
             const {
                 plat_nomor,
                 warna,
@@ -34,8 +39,8 @@ module.exports = {
                     return res.status(409).json(response)
                 }
 
-                parking_lot = "A1"
-                tanggal_masuk = new Date();
+                const parking_lot = "A1"
+                let tanggal_masuk = new Date();
                 carData = {
                     plat_nomor,
                     warna,
@@ -52,7 +57,7 @@ module.exports = {
                         data: {
                             plat_nomor,
                             parking_lot,
-                            tanggal_masuk
+                            tanggal_masuk: convertDateTime(tanggal_masuk)
                         }
                     }
                     res.status(201).json(response)
@@ -105,15 +110,15 @@ module.exports = {
             const findExist = existCars.find(car => car.plat_nomor === plat_nomor)
             console.log(findExist)
             if (findExist) {
-                const tanggal_keluar = new Date();
-                const jumlah_bayar = "45000"
                 const filterCars = existCars.filter(car => car.plat_nomor !== plat_nomor)
-                console.log(filterCars)
+                // console.log(filterCars)
                 mParkingLot.saveData(filterCars).then(async () => {
                     try {
                         let history = await mParkingLot.readHistory()
                         console.log(history)
                         let data = findExist
+                        const tanggal_keluar = new Date();
+                        const jumlah_bayar = calculateTotalPayment(data.tanggal_masuk, tanggal_keluar, data.tipe.toLowerCase())
                         data = {
                             ...data,
                             tanggal_keluar,
@@ -127,8 +132,8 @@ module.exports = {
                                 error: null,
                                 data: {
                                     plat_nomor: data.plat_nomor,
-                                    tanggal_masuk: data.tanggal_masuk,
-                                    tanggal_keluar: data.tanggal_keluar,
+                                    tanggal_masuk: convertDateTime(data.tanggal_masuk),
+                                    tanggal_keluar: convertDateTime(data.tanggal_keluar),
                                     jumlah_bayar: data.jumlah_bayar
                                 }
                             }
