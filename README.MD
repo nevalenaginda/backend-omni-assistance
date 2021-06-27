@@ -37,4 +37,4 @@ This is a repository created to fulfill the Omni Assistance technical backend te
 
 ## 💭 API Documentation
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/13256965/TzRNFA6K)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/13256965/Tzef93Du)
