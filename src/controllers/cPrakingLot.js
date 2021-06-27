@@ -348,7 +348,7 @@ module.exports = {
                 error: null,
                 data: {
                     jumlah: availableLot.length,
-                    slot_terpakai: availableLot
+                    slot_tersedia: availableLot
                 }
             }
             return res.status(200).json(response)
